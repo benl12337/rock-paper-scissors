@@ -1,4 +1,4 @@
-
+// this function randomly selects for the computer out of Rock, Paper and Scissors
 function getComputerChoice() {
   let choice = Math.floor(Math.random() * 3);
   if (choice == 0) {
@@ -10,12 +10,7 @@ function getComputerChoice() {
   }
 }
 
-function getPlayerChoice() {
-  let str = prompt("Please choose between Rock, Paper or Scissors");
-  let choice = str[0].toUpperCase() + str.slice(1).toLowerCase();
-  return choice;
-}
-
+// this function returns the winner based on the player's seclection and computer's selection
 function playRound(playerSelection, computerSelection) {
   if (playerSelection == computerSelection) {
     return "You draw!";
@@ -30,19 +25,52 @@ function playRound(playerSelection, computerSelection) {
   }
 }
 
-function game() {
-  let playerWins = 0;
-  let compWins = 0;
-  for (let i = 0; i < 5; i++) {
-    let outcome = playRound(getPlayerChoice(), getComputerChoice());
-    console.log(outcome);
-    if (outcome.includes("Win")) {
-      playerWins++;
-    } else if (outcome.includes("Lose")) {
-      compWins++;
-    } 
-  }
-  console.log(`Player Wins: ${playerWins}\nComputer Wins: ${compWins}`);
-}
+const result = document.querySelector('#results');
+const inner = document.querySelector('#resultText');
+const scoreBoard = document.querySelector('#playerScore');
+const compScoreBoard = document.querySelector('#compScore');
 
-game();
+let count = 0;
+let playerScore = 0;
+let compScore = 0;
+
+const playerScoreNode = document.createTextNode(playerScore);
+scoreBoard.appendChild(playerScoreNode);
+const compScoreNode = document.createTextNode(compScore);
+compScoreBoard.appendChild(compScoreNode);
+const buttons = document.querySelectorAll('button');
+
+buttons.forEach(button => {
+  button.addEventListener('click', function playGame() {
+
+    // present winner if one of them reaches 5 points
+    if (playerScore == 5) {
+      inner.innerText = "YOU WIN!!!";
+      return;
+    } else if (compScore == 5) {
+      inner.innerText = "YOU LOSE :(";
+      return;
+    }
+
+    inner.innerText = "";
+    let gameResult = playRound(button.id, getComputerChoice());
+    const Node = document.createTextNode(gameResult);
+
+    if (gameResult.includes('Win')) {
+      playerScore += 1;
+    } else if (gameResult.includes('Lose')) {
+      compScore += 1;
+    }
+    playerScoreNode.textContent = playerScore;
+    compScoreNode.textContent = compScore;
+    inner.appendChild(Node);
+    result.appendChild(inner);
+    count += 1;
+    console.log(count);
+  });
+});
+
+
+
+
+
