@@ -2,7 +2,7 @@
 function getComputerChoice() {
   let choice = Math.floor(Math.random() * 3);
   if (choice == 0) {
-  return 'Rock';
+    return 'Rock';
   } else if (choice == 1) {
     return 'Paper';
   } else {
@@ -25,50 +25,68 @@ function playRound(playerSelection, computerSelection) {
   }
 }
 
-const result = document.querySelector('#results');
-const inner = document.querySelector('#resultText');
-const scoreBoard = document.querySelector('#playerScore');
-const compScoreBoard = document.querySelector('#compScore');
-
-let count = 0;
-let playerScore = 0;
-let compScore = 0;
-
-const playerScoreNode = document.createTextNode(playerScore);
-scoreBoard.appendChild(playerScoreNode);
-const compScoreNode = document.createTextNode(compScore);
-compScoreBoard.appendChild(compScoreNode);
 const buttons = document.querySelectorAll('button');
+const reset = document.querySelector('#reset');
+reset.style.display = "none";
 
-buttons.forEach(button => {
-  button.addEventListener('click', function playGame() {
+function gameRound() {
+  const roundResults = document.querySelector('#resultText');
+  const gameResult = document.querySelector('#finalWinner');
+  const playerScoreText = document.querySelector('#playerScore');
+  const compScoreText = document.querySelector('#compScore');
 
-    // present winner if one of them reaches 5 points
-    if (playerScore == 5) {
-      inner.innerText = "YOU WIN!!!";
-      return;
-    } else if (compScore == 5) {
-      inner.innerText = "YOU LOSE :(";
-      return;
-    }
+  let playerScore = 0;
+  let compScore = 0;
 
-    inner.innerText = "";
-    let gameResult = playRound(button.id, getComputerChoice());
-    const Node = document.createTextNode(gameResult);
+  playerScoreText.textContent = playerScore;
+  compScoreText.textContent = compScore;
 
-    if (gameResult.includes('Win')) {
-      playerScore += 1;
-    } else if (gameResult.includes('Lose')) {
-      compScore += 1;
-    }
-    playerScoreNode.textContent = playerScore;
-    compScoreNode.textContent = compScore;
-    inner.appendChild(Node);
-    result.appendChild(inner);
-    count += 1;
-    console.log(count);
+  buttons.forEach(button => {
+    button.addEventListener('click', function playGame() {
+      console.log("player: " + playerScore);
+      console.log("comp: " + compScore);
+      if (button.id == "reset") {
+        reset.style.display = "none";
+        console.log(playerScore);
+        compScore = 0;
+        playerScore = 0;
+        playerScoreText.textContent = playerScore;
+        compScoreText.textContent = compScore;
+        gameResult.textContent = "";
+        return;
+      }
+
+      playerScoreText.textContent = playerScore;
+      compScoreText.textContent = compScore;
+      if (playerScore == 5) {
+        // reset the game
+        roundResults.textContent = "";
+        gameResult.textContent = "YOU WIN!!!"
+        reset.style.display = "block";
+        return;
+
+      } else if (compScore == 5) {
+        // reset the game
+        roundResults.textContent = "";
+        gameResult.textContent = "YOU LOSE :("
+        reset.style.display = "block";
+        return;
+      }
+      // else calculate the winner
+      const result = playRound(button.id, getComputerChoice());
+      roundResults.textContent = result;
+      if (result.includes('Win')) {
+        playerScore += 1;
+      } else if (result.includes('Lose')) {
+        compScore += 1;
+      }
+    });
   });
-});
+}
+
+gameRound();
+
+
 
 
 

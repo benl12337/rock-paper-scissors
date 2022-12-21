@@ -1,0 +1,96 @@
+// this function randomly selects for the computer out of Rock, Paper and Scissors
+function getComputerChoice() {
+  let choice = Math.floor(Math.random() * 3);
+  if (choice == 0) {
+    return 'Rock';
+  } else if (choice == 1) {
+    return 'Paper';
+  } else {
+    return 'Scissors';
+  }
+}
+
+// this function returns the winner based on the player's seclection and computer's selection
+function playRound(playerSelection, computerSelection) {
+  if (playerSelection == computerSelection) {
+    return "You draw!";
+  } else if (playerSelection == 'Rock' && computerSelection == 'Scissors') {
+    return `You Win! ${playerSelection} beats ${computerSelection}`;
+  } else if (playerSelection == 'Paper' && computerSelection == 'Rock') {
+    return `You Win! ${playerSelection} beats ${computerSelection}`;
+  } else if (playerSelection == 'Scissors' && computerSelection == 'Paper') {
+    return `You Win! ${playerSelection} beats ${computerSelection}`;
+  } else {
+    return `You Lose! ${computerSelection} beats ${playerSelection}`;
+  }
+}
+
+function gameRound() {
+  const result = document.querySelector('#results');
+  const inner = document.querySelector('#resultText');
+  const scoreBoard = document.querySelector('#playerScore');
+  const compScoreBoard = document.querySelector('#compScore');
+
+  let count = 0;
+  let playerScore = 0;
+  let compScore = 0;
+
+  const playerScoreNode = document.createTextNode(playerScore);
+  scoreBoard.appendChild(playerScoreNode);
+  const compScoreNode = document.createTextNode(compScore);
+  compScoreBoard.appendChild(compScoreNode);
+  const buttons = document.querySelectorAll('button');
+  const winnerResult = document.querySelector('#winner');
+
+  const reset = document.querySelector('#reset');
+  reset.style.display = "none";
+
+  buttons.forEach(button => {
+    button.addEventListener('click', function playGame() {
+      if (playerScore == 5) {
+        inner.innerText = "";
+        winnerResult.innerText = "YOU WIN!!!";
+        reset.style.display = "block";
+        return;
+      } else if (compScore == 5) {
+        inner.innerText = "";
+        winnerResult.innerText = "YOU LOSE :(";
+        reset.style.display = "block";
+        return;
+      }
+      if (button.id == "reset") {
+        return;
+      }
+      inner.innerText = "";
+      let gameResult = playRound(button.id, getComputerChoice());
+      const Node = document.createTextNode(gameResult);
+
+      if (gameResult.includes('Win')) {
+        playerScore += 1;
+      } else if (gameResult.includes('Lose')) {
+        compScore += 1;
+      }
+      playerScoreNode.textContent = playerScore;
+      compScoreNode.textContent = compScore;
+      inner.appendChild(Node);
+      result.appendChild(inner);
+      count += 1;
+      console.log(count);
+    });
+  });
+}
+
+
+reset.addEventListener('click', function resetGame() {
+  const resetButton = document.querySelector('#reset');
+  resetButton.style.display = "none";
+  gameRound();
+});
+
+
+gameRound();
+
+
+
+
+
